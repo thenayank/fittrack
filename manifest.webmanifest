@@ -1,0 +1,88 @@
+{
+ "id": "/fittrack/",
+ "name": "FitTrack",
+ "short_name": "FitTrack",
+ "description": "Calm, offline vegetarian weight-loss tracker: meals, protein, water, workouts and meal plans.",
+ "start_url": "./?source=pwa",
+ "scope": "./",
+ "display": "standalone",
+ "display_override": [
+  "standalone"
+ ],
+ "orientation": "portrait",
+ "background_color": "#F2F2F7",
+ "theme_color": "#F2F2F7",
+ "lang": "en-IN",
+ "dir": "ltr",
+ "categories": [
+  "health",
+  "fitness",
+  "food"
+ ],
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "icons/maskable-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "icons/maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Quick log",
+   "short_name": "Log",
+   "url": "./?action=log",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  },
+  {
+   "name": "Add water",
+   "short_name": "Water",
+   "url": "./?action=water",
+   "icons": [
+    {
+     "src": "icons/icon-192.png",
+     "sizes": "192x192"
+    }
+   ]
+  }
+ ],
+ "screenshots": [
+  {
+   "src": "screens/today.png",
+   "sizes": "780x1688",
+   "type": "image/png",
+   "form_factor": "narrow",
+   "label": "Today"
+  },
+  {
+   "src": "screens/desktop.png",
+   "sizes": "1280x800",
+   "type": "image/png",
+   "form_factor": "wide",
+   "label": "Desktop"
+  }
+ ]
+}

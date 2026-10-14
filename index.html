@@ -1045,7 +1045,8 @@ const TOPUP=()=>[['whey',1,'snack1',.5],['plant_protein',1,'snack1',.5],['lf_pan
 const CAP={whey:1,plant_protein:1,lf_paneer:200,hp_curd:2,greek:3,soya_salad:1.5,tofu:200,paneer_tikka:8,lf_tikka:8,soya_tikka:1.5,soya_curry:1.5,soya_keema:1.5,lf_bhurji:1.5,paneer_cube_lf:2,protein_lassi:1};
 function recentMains(date,n=3){const s=new Set();for(let i=1;i<=n;i++){const d=S.plan.days[addD(date,-i)];if(!d)continue;MEALSLOTS.forEach(k=>(d[k]?.items||[]).forEach(([id])=>{if(!STAPLE.has(id))s.add(id)}))}return s}
 function mainsOK(items,avoid){return items.every(([id])=>STAPLE.has(id)||!avoid.has(id))}
-function genDay(date,keep){const c=calc(),T=c.target,P=c.prot,r=rng(hashS(date)+S.plan.seed*7919),old=S.plan.days[date]||{},d={};
+function genDay(date,keep){const c=calc();let best=null;for(let k=0;k<8;k++){const d=genDay0(date,keep,k),t=dayTot(d),e=Math.max(0,Math.abs(t.kcal/c.target-1)-.04)+Math.max(0,.95-t.p/c.prot)+Math.max(0,t.p/c.prot-1.2);if(!best||e<best.e)best={d,e};if(!e)break}return best.d}
+function genDay0(date,keep,salt){const c=calc(),T=c.target,P=c.prot,r=rng(hashS(date)+S.plan.seed*7919+(salt||0)*104729),old=S.plan.days[date]||{},d={};
  const avoid=recentMains(date);d.early={items:FIXED.early.map(x=>[...x])};d.milk={items:S.plan.hideMilk?[]:FIXED.milk.map(x=>[...x])};
  let best=null;for(let t=0;t<220;t++){const pick={},used=new Set();let ok=true;
   for(const k of MEALSLOTS){if(keep&&old[k]?.lock){pick[k]=old[k];continue}const opts=COMBOS[k].filter(cb=>mainsOK(cb,avoid)&&cb.every(([id])=>STAPLE.has(id)||!used.has(id))&&cb.every(([id])=>okFood(id)));
@@ -1075,7 +1076,15 @@ function fitDay(d,T,P){// protein-first portion tuning: hit ~P g (±5%) and ~T k
   else if(dk>0){const dn=cand.filter(c=>c.canDown).sort((a,b)=>a.pd-b.pd)[0];if(dn)act=[dn,-1]}
   else{const up=cand.filter(c=>c.canUp).sort((a,b)=>pk<P*.05?b.pd-a.pd:a.pd-b.pd)[0];if(up)act=[up,1]}
   if(!act)break;const[c,sg]=act;const x=d[c.k].items[c.i];x[1]=R1(x[1]+sg*c.st);if(x[1]<=0)d[c.k].items.splice(c.i,1)}
- {const tot=dayTot(d),sc=Math.max(0,Math.abs(tot.kcal-T)/T-.025)*2+Math.max(0,-(tot.p-P)/P-.02)*3+Math.max(0,(tot.p-P)/P-.04);if(best&&best.sc<sc)JSON.parse(best.s).forEach((it,i)=>d[MEALSLOTS[i]].items=it)}}
+ {const tot=dayTot(d),sc=Math.max(0,Math.abs(tot.kcal-T)/T-.025)*2+Math.max(0,-(tot.p-P)/P-.02)*3+Math.max(0,(tot.p-P)/P-.04);if(best&&best.sc<sc)JSON.parse(best.s).forEach((it,i)=>d[MEALSLOTS[i]].items=it)}kTrim(d,T,P)}
+function kTrim(d,T,P){// fine kcal pass: protein is a floor (>=95% P, <= ~125% P), kcal within ±4%
+ const fine=f=>f.unit==='g'?10:f.unit==='piece'?.5:.25,K=['early','milk',...MEALSLOTS];
+ for(let it=0;it<120;it++){const t=dayTot(d),dk=t.kcal-T;if(Math.abs(dk)<=T*.035)break;const c=[];
+  K.forEach(k=>{if(!d[k]||d[k].lock)return;d[k].items.forEach((x,i)=>{const f=FOODS[x[0]];if(!f)return;const st=fine(f),n=nut(f,f.unit,st);if(n.kcal<5)return;
+   const mn=f.unit==='g'?30:f.unit==='piece'?.5:.25,cap=CAP[x[0]]??(f.unit==='piece'?6:f.unit==='g'?200:2.5);c.push({x,st,kc:n.kcal,p:n.p,pd:n.p*4/n.kcal,dn:x[1]-st>=mn-1e-9,up:x[1]+st<=cap+1e-9&&okFood(x[0])})})});
+  let ch;if(dk>0)ch=c.filter(o=>o.dn&&t.p-o.p>=P*.95).sort((a,b)=>a.pd-b.pd)[0];
+  else ch=c.filter(o=>o.up&&t.p+o.p<=P*1.25).sort((a,b)=>a.pd-b.pd)[0];
+  if(!ch)break;ch.x[1]=Math.round(100*(ch.x[1]+(dk>0?-1:1)*ch.st))/100}}
 function genRange(from,n){for(let i=0;i<n;i++){const dt=addD(from,i);S.plan.days[dt]=genDay(dt,true)}save()}
 function alternatives(date,k){const c=calc(),d=S.plan.days[date],cur=JSON.stringify(d[k].items.map(x=>x[0])),others=itemsNut(SLOTS.filter(s=>s[0]!==k).flatMap(([s])=>d[s]?.items||[])),need=c.target-others.kcal;
  return COMBOS[k].filter(cb=>JSON.stringify(cb.map(x=>x[0]))!==cur).map(cb=>{const t=itemsNut(cb);return{cb,t,score:Math.abs(t.kcal-need)}}).sort((a,b)=>a.score-b.score)}

@@ -1096,6 +1096,7 @@ function foodResults(){const el=$('#fres');if(!el)return;const q=FS.q.trim();
   ${rec.length?`<p class="sec">Recent</p><div class="list">${rec.slice(0,10).map(f=>resRow(f)).join('')}</div>`:''}
   ${!favs.length&&!rec.length?`<p class="sec">Popular</p><div class="list">${frequent(8).map(f=>resRow(f)).join('')}</div>`:''}
   ${FS.onPick?'':`<p class="sec">Make it yours</p><div class="list"><button class="li" data-a="newcustom">${ic('plus')}<span class="t"><b>Custom food</b></span>${ic('chev','chev')}</button><button class="li" data-a="newrecipe">${ic('pot')}<span class="t"><b>New recipe from ingredients</b></span>${ic('chev','chev')}</button></div>`}`;return}
+ if(!FS.onPick&&isMulti(q)){if(NLQ!==q){NL=parseNL(q);NLQ=q}el.innerHTML=`<div class="card logall"><div class="row" style="justify-content:space-between"><b>${ic('sparkle')} Log all</b><span class="fn">${NL.filter(x=>!x.miss).length} items · est.</span></div><div id="nlres"></div></div>`;renderNL(q);return}
  const r=search(q).filter(f=>!FS.onPick||(f.cat!=='recipe'&&f.cat!=='custom'));
  if(r.length){el.innerHTML=`<div class="list">${r.map(f=>resRow(f,q)).join('')}</div>${FS.onPick?'':`<button class="g block" data-a="newcustom" data-name="${esc(q)}">Didn’t find it? Create “${esc(q)}”</button>`}`;return}
  const near=nearby(q);
@@ -1131,11 +1132,16 @@ function parseNL(text){const segs=String(text).toLowerCase().replace(/[।!?.;]/
   else if(f.unit==='g'){unit='g';qty=q>=20?q:Math.round(q*100)}
   if(!(qty>0))continue;out.push({f,u:unit,q:qty,n:nut(f,unit,qty),guess:!u&&f.unit!=='piece'&&f.unit!=='g'&&q>=2})}
  return out}
-let NL=[];
+let NL=[],NLQ=null;
+const MULTI_SEP=/,|\+|&|\b(?:and|aur|with|saath|sath|ke saath|then|phir)\b/;
+function isMulti(q){const n=norm(q);if(!n)return false;const ws=n.split(' ');
+ if(IDX||buildIdx()||true){if(IDX.some(e=>e.names.includes(n)))return false}
+ const hasSep=MULTI_SEP.test(q.toLowerCase()),hasQty=ws.some(w=>/^\d/.test(w)||(NUMW[w]!==undefined&&!['a','an','one'].includes(w))||UNITW[w]);
+ if(!hasSep&&!hasQty)return false;const p=parseNL(q),ok=p.filter(x=>!x.miss);return hasSep?ok.length>=2||(ok.length>=1&&hasQty):ok.length>=1}
 function nlPreview(){const v=($('#nlq')||{}).value||'';NL=v.trim()?parseNL(v):[];renderNL(v.trim())}
 function renderNL(v=' '){const el=$('#nlres');if(!el)return;
  el.innerHTML=!v?'':NL.length?`<div class="list">${NL.map((x,i)=>x.miss?`<div class="li"><span class="t"><b>“${esc(x.miss)}”</b><span>Not recognised — try another name</span></span></div>`:`<div class="li nli"><span class="t"><b>${esc(x.f.name)}</b><span>${x.n.kcal} kcal · P ${x.n.p} g${x.guess?' · <em class="warn">check amount</em>':''}</span></span><div class="stepper mini"><button data-a="nlq" data-i="${i}" data-v="-1" aria-label="Less ${esc(x.f.name)}">−</button><span class="num">${x.u==='g'?x.q+' g':frac(x.q)+' '+unitName(x.f,x.u)}</span><button data-a="nlq" data-i="${i}" data-v="1" aria-label="More ${esc(x.f.name)}">+</button></div><button class="ic" data-a="nldel" data-i="${i}" aria-label="Remove ${esc(x.f.name)}">${ic('x')}</button></div>`).join('')}</div>
- ${NL.some(x=>!x.miss)?`<button class="block" data-a="nladd">Add ${NL.filter(x=>!x.miss).length} item${NL.filter(x=>!x.miss).length>1?'s':''} · ${NL.reduce((s,x)=>s+(x.n?.kcal||0),0)} kcal</button>`:''}`:`<p class="fn">Couldn’t read that. Try “2 roti aur 1 katori dal”.</p>`}
+ ${NL.some(x=>!x.miss)?`${$('#fq')?`<p class="fn tot" style="margin:8px 4px">Total <b>${NL.reduce((s,x)=>s+(x.n?.kcal||0),0)} kcal</b> · protein <b>${R1(NL.reduce((s,x)=>s+(x.n?.p||0),0))} g</b></p><button class="block" data-a="nladd">Add all to ${MTL[FS.meal].toLowerCase()}</button>`:`<button class="block" data-a="nladd">Add ${NL.filter(x=>!x.miss).length} item${NL.filter(x=>!x.miss).length>1?'s':''} · ${NL.reduce((s,x)=>s+(x.n?.kcal||0),0)} kcal</button>`}`:''}`:`<p class="fn">Couldn’t read that. Try “2 roti aur 1 katori dal”.</p>`}
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
 function listen(){if(!SR)return toast('Voice input isn’t supported in this browser');try{const r=new SR();r.lang='en-IN';r.interimResults=false;r.maxAlternatives=1;const b=$('#mic');b&&b.classList.add('rec');
  r.onresult=e=>{$('#nlq').value=e.results[0][0].transcript;nlPreview()};r.onerror=e=>toast(e.error==='not-allowed'?'Microphone permission denied':'Didn’t catch that — try again');r.onend=()=>{b&&b.classList.remove('rec')};r.start()}catch(e){toast('Voice input unavailable')}}
@@ -1439,7 +1445,7 @@ const A={
  streakinfo:()=>openSheet('Your streak',`<div class="card"><p style="margin:0">Your streak counts days in a row where you logged <b>anything</b> — a meal, water, a workout or a weigh-in.</p><p class="mu" style="margin:12px 0 0">Miss a day? A streak freeze (you earn one a week, save up to 2) covers it automatically when you come back. No guilt.</p></div>`,null,{detent:'half'}),
  doimport:()=>{if(!PENDING)return;const lb=S.lastBackup;S=PENDING;S.lastBackup=S.lastBackup||lb;PENDING=null;applyOver();IDX=null;save();closeSheet();toast('Backup imported')},
  reset:()=>{if(confirm('Erase ALL FitTrack data on this device? Export first if unsure.')){localStorage.removeItem(KEY);location.reload()}},
- mic:()=>listen(),nldel:el=>{NL.splice(+el.dataset.i,1);renderNL()},nladd:()=>{const ok=NL.filter(x=>!x.miss);if(!ok.length)return;const meal=guessMeal(),added=ok.map(x=>pushMeal(today(),meal,x.f,x.u,x.q,'normal',x.n));award(10,'meal');closeSheet();toast(`${added.length} item${added.length>1?'s':''} added to ${MTL[meal].toLowerCase()}`,()=>{S.meals=S.meals.filter(m=>!added.includes(m));save();render(true)})},
+ mic:()=>listen(),nldel:el=>{NL.splice(+el.dataset.i,1);renderNL()},nladd:()=>{const ok=NL.filter(x=>!x.miss);if(!ok.length)return;const inS=!!$('#fq'),meal=inS?FS.meal:guessMeal(),dt=inS?FS.date:today();NLQ=null;const added=ok.map(x=>pushMeal(dt,meal,x.f,x.u,x.q,'normal',x.n));award(10,'meal');closeSheet();toast(`${added.length} item${added.length>1?'s':''} added to ${MTL[meal].toLowerCase()}`,()=>{S.meals=S.meals.filter(m=>!added.includes(m));save();render(true)})},
  est:el=>logEst(el.dataset.v),onboard:()=>onboard(),
  obnext:()=>{const e=obValidate();if(e){$('#oberr').textContent=e;return}OB.i++;drawOB()},obback:()=>{OB.i=Math.max(0,OB.i-1);drawOB()},obskip:()=>{S.onboarded=true;save();obClose()},
  obset:el=>{const k=el.dataset.k,v=el.dataset.v;OB.d[k]=k==='sex'?v:+v;drawOB()},

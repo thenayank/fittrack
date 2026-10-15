@@ -42,3 +42,11 @@ Source is in `src/` (`style.css`, `foods.js`, `app1–5.js`). Run `python3 build
 - Diet-aware meal planner (allergies, dislikes, regional bias); 12-week exercise program with injury-safe swaps, SVG illustrations, timer player, logging and weekly adaptation.
 - Goal accent colours, calm progress-first UI, daily next-step card, small wins.
 - NL parser: fuzzy units (katorri…), longest-name food match, tap an item to change the food; iOS keyboard handling uses visualViewport.
+
+## 4.1 (Oct 2026)
+- Global iOS keyboard handling: any focused field (sheets, onboarding, pages, all food inputs) stays above the keyboard; sheets go full visible height while typing; numeric keypad for number fields.
+- Weekly report card (auto Sundays + on demand), PNG export, Web Share, history.
+- Apple Health import via iOS Shortcuts (clipboard or URL), preview + dedupe merge, pasted-text fallback, 9 PM automation guide.
+- Friends challenges without a server: invite codes, tamper-evident progress codes, local leaderboard.
+- Photo food log: compressed thumbnails in IndexedDB, smart suggestions (plan/recent/frequent).
+- Stress fixes: double-submit guard, view-transition race, storage-full safety, no duplicate active-profile copy, per-day meal index, long-name wrapping.

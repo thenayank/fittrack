@@ -1,5 +1,5 @@
 // FitTrack service worker — cache-first, versioned
-const VERSION='ft-b89fe51675';const CORE=["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/maskable-192.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
+const VERSION='ft-2c627e9b5f';const CORE=["./", "index.html", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "icons/maskable-512.png", "icons/maskable-192.png", "icons/apple-touch-icon.png", "icons/favicon-32.png"];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(VERSION).then(c=>c.addAll(CORE)))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('ft-')&&k!==VERSION).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('message',e=>{if(e.data==='skip')self.skipWaiting()});

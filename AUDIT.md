@@ -54,3 +54,8 @@ Journey questions newly answered: 2, 3, 4, 5, 6 (copy a single entry; whole-day 
 
 ## 5. Still open / suggested next
 Copy a whole day; barcode scanning; before/after photos; BP and sugar logs; cycle tracking; sleep from Health export feeding Readiness; correlation hints ("on days you slept 7 h+ you ate 180 kcal less"); manual exercise swap; waist chart.
+
+## 6. 4.4 follow-up (built)
+- Onboarding → guided tour (6 steps, show-once, replay, existing users offered once) and a Getting-started checklist with XP.
+- Rings redesign modelled on Apple Fitness screenshots: weekday ring row, arrow end-caps, ring detail with hourly chart, Change Goal / Pause Ring, Summary card grid, Awards row, and 90-vs-365-day Trends. Awards are derived from logged data, so they can't be "lost" after a restore (a common Apple complaint).
+- Hourly data comes from timed workouts plus hourly steps and energy stored by the Health export import. Days without timestamps say so instead of making up hours.

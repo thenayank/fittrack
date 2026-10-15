@@ -55,6 +55,19 @@ Source is in `src/` (`style.css`, `foods.js`, `app1–5.js`). Run `python3 build
 - More › Apple Health › Import Health export: pick export.zip/export.xml from Files; read fully on-device in chunks (zip central directory + DecompressionStream('deflate-raw'), bundled inflate fallback; streaming XML scanner). Range picker (default 90 days), progress + cancel, preview, merge replacing imported days.
 - Per day: steps & walking/running distance (per-hour max across sources so iPhone+Watch aren't double counted), active energy (kcal/kJ), latest body mass (lb/st→kg), workouts (duration, kcal, distance; old and iOS 16+ formats). New 30-day steps chart on Progress; weekly report uses imported steps/workouts.
 
+## 4.4 (Oct 2026) — guided tour + Activity
+- **Guided tour** after onboarding: 6 spotlight coach-marks over the real UI (Today rings, food log/search, plan & workouts, weigh-in, Progress & history, More). Next/Back/Skip, arrow keys/Esc, shown once; replay from More › Replay tour. Existing users get a one-time "Take tour" offer and are never forced into it.
+- **Getting started** checklist on Today for new users: first meal (+20 XP), first workout (+30), weigh-in (+15), close one ring (+25). Hides itself once all four are done.
+- **Activity** (tap the rings card, or More › Activity), with Apple Fitness-style layout in FitTrack's own colours:
+  - weekday mini-rings with today highlighted
+  - big rings with arrow end-caps
+  - Move/Exercise/Steps detail with an hourly bar chart, total, steps and distance
+  - Change Goal / Pause Ring pill buttons
+  - Summary grid (steps, distance, sessions, weekly workout time, weekly distance, effort)
+  - Awards row
+  - Trends with 90-day vs 365-day up/down arrows
+- Apple Health export import now keeps **hourly** steps, active energy and distance, so the hourly charts work. Imported active energy now counts toward the Move ring.
+
 ## 4.3 (Oct 2026) — audit release (see AUDIT.md)
 - **Edit logged meals:** tap any Log entry to change the amount, unit, meal slot or date, copy it to today, or delete it.
 - **Diary search + date jump:** Log › "Search my diary" shows when you last ate something; you can also jump to any date.

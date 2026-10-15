@@ -54,3 +54,8 @@ Source is in `src/` (`style.css`, `foods.js`, `app1–5.js`). Run `python3 build
 ## 4.1.1 (Oct 2026)
 - More › Apple Health › Import Health export: pick export.zip/export.xml from Files; read fully on-device in chunks (zip central directory + DecompressionStream('deflate-raw'), bundled inflate fallback; streaming XML scanner). Range picker (default 90 days), progress + cancel, preview, merge replacing imported days.
 - Per day: steps & walking/running distance (per-hour max across sources so iPhone+Watch aren't double counted), active energy (kcal/kJ), latest body mass (lb/st→kg), workouts (duration, kcal, distance; old and iOS 16+ formats). New 30-day steps chart on Progress; weekly report uses imported steps/workouts.
+
+## 4.2 (Oct 2026)
+- Workout history (Progress card, Today › History, More): ranges, totals, weekly minutes chart, type/source filters, virtualized list, details, edit/delete with undo (manual).
+- Health export import: choose Workouts / Steps & distance / Active calories / Weight (remembered); only selected types merged.
+- Food tray: tap + on several foods (or the same one repeatedly, ×N badge), adjust amounts, "Add N items". Quantity phrases in search ("3 medu vada"); more medu vada aliases.

@@ -279,7 +279,7 @@ ol.guide{margin:0 4px;padding-left:22px;font:400 15px/22px var(--font)}ol.guide 
 .chrow .t{flex:1;min-width:0}.bar{display:block;height:8px;border-radius:4px;background:var(--fill);margin:6px 0 4px;overflow:hidden}.bar i{display:block;height:100%;border-radius:4px;background:var(--tint);transition:width .5s ease}
 .fl{display:block;font:500 13px/18px var(--font);color:var(--mu);margin:0 0 10px}.fl input,.fl select{display:block;width:100%;margin-top:4px}
 .phtop{display:flex;gap:12px;align-items:flex-start}.phtop>div{flex:1;min-width:0}.phbig{width:96px;height:96px;object-fit:cover;border-radius:14px;flex:none;background:var(--fill)}.ai-s{white-space:normal;margin:8px 0 0}
-.chip.on{background:color-mix(in srgb,var(--tint) 18%,var(--card));box-shadow:inset 0 0 0 1.5px var(--tint)}.phbar{position:sticky;bottom:0;background:var(--bg2,var(--card));padding:12px 0 calc(8px + env(safe-area-inset-bottom));margin-top:12px}
+.phbar{position:sticky;bottom:0;background:var(--bg2,var(--card));padding:12px 0 calc(8px + env(safe-area-inset-bottom));margin-top:12px}
 img.mph{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;margin-right:2px;background:var(--fill)}
 @keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.06)}100%{transform:none;opacity:1}}
 @media (prefers-reduced-motion:reduce){.gold-t{animation:none}.bar i{transition:none}}
@@ -291,6 +291,19 @@ img.mph{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;mar
 .kbd .phbar{position:static}
 .stepchart{width:100%;height:auto;display:block}.stepchart rect{fill:color-mix(in srgb,var(--tint) 45%,transparent)}.stepchart rect.hit{fill:var(--tint)}.stepchart .goal{stroke:var(--gold);stroke-dasharray:3 3;stroke-width:1}.stepchart text{font:500 9px var(--font);fill:var(--mu)}
 .hxsum{grid-template-columns:repeat(4,minmax(0,1fr))}.hxsum .rs{background:var(--fill);color:var(--tx)}
+.whsum{grid-template-columns:repeat(5,minmax(0,1fr))}.whsum .rs,.whd .rs{background:var(--fill);color:var(--tx)}.whsum .rs b{font-size:17px}.whsum .rs span{font-size:11px}
+.whv{position:relative;margin-top:12px;contain:strict}.whi{position:absolute;left:0;right:0}.whi .li{width:100%;height:100%;background:var(--card);border-radius:12px;text-align:left;display:flex;align-items:center;gap:10px;padding:8px 12px}
+.whh{display:flex;justify-content:space-between;align-items:flex-end;height:100%;padding:0 6px 6px;font:600 13px var(--font);color:var(--mu);text-transform:uppercase}
+.sbadge{font:600 11px/16px var(--font);padding:2px 8px;border-radius:99px;background:var(--fill);color:var(--mu);white-space:nowrap;flex:none}.sbadge.s-health{background:color-mix(in srgb,#FF2D55 14%,var(--card));color:#D70F45}.sbadge.s-plan{background:color-mix(in srgb,var(--tint) 16%,var(--card));color:var(--tint)}
+.whcard{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:var(--tx)}.whcard .t{flex:1;display:flex;flex-direction:column;min-width:0}.whcard .t span{font-size:13px;color:var(--mu)}
+.whd .ico.big{width:44px;height:44px;border-radius:12px;display:grid;place-items:center}.dang{color:#C2410C}
+.whi .ico{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:none}.whi .ico .i{stroke:#fff}.whi .t{flex:1;display:flex;flex-direction:column;min-width:0}.whi .t span{font-size:13px;color:var(--mu);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* food tray */
+.tray{position:sticky;bottom:0;margin:12px -16px -24px;padding:10px 16px calc(12px + env(safe-area-inset-bottom));background:var(--bg);box-shadow:0 -6px 18px rgba(0,0,0,.08);border-radius:18px 18px 0 0;z-index:2}
+.trl{max-height:30vh;overflow:auto;margin-bottom:8px}.tri{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:.5px solid var(--sep,rgba(0,0,0,.08))}.tri .t{flex:1;min-width:0;display:flex;flex-direction:column}.tri .t span{font-size:13px;color:var(--mu)}.tri .t b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ic.sm{width:36px;height:36px;min-height:36px;font:600 20px/1 var(--font);border-radius:50%;background:var(--fill)}.trn{min-width:22px;text-align:center}
+[data-a=qadd] .cnt{margin-left:4px;font:700 12px/16px var(--font);padding:1px 6px;border-radius:99px;background:var(--tint);color:#fff}.qadd.has{background:color-mix(in srgb,var(--tint) 18%,var(--card));width:auto;padding:0 8px}
+.kbd .tray{position:static;margin-bottom:0}
 </style></head><body>
 <main id="main"></main>
 <nav class="tabbar" id="tabbar" aria-label="Tabs"></nav>
@@ -390,7 +403,7 @@ const FOOD_DATA=[
 ['masala_dosa','Masala dosa','masale dose','south','piece',180,360,7,50,15,'o'],
 ['rava_dosa','Rava dosa','sooji dosa','south','piece',100,200,4,28,8,'o'],
 ['uttapam','Onion uttapam','uthappam,uttappa','south','piece',120,210,5,34,6,'o'],
-['medu_vada','Medu vada','vada,vadai,uzhunnu vada,urad vada','south','piece',40,135,4,14,7,'o'],
+['medu_vada','Medu vada','vada,vadai,uzhunnu vada,urad vada,medu wada,medhu vada,wada,medu vadai,medu','south','piece',40,135,4,14,7,'o'],
 ['pesarattu','Pesarattu','moong dosa,green gram dosa','south','piece',100,180,9,26,5,'o'],
 ['appam','Appam','palappam','south','piece',60,120,2,23,2,''],
 ['upma','Upma','rava upma,uppittu,sooji upma','breakfast','katori',150,200,5,30,7,'o'],
@@ -1191,7 +1204,7 @@ function foodResults(){const el=$('#fres');if(!el)return;const q=FS.q.trim();
   ${rec.length?`<p class="sec">Recent</p><div class="list">${rec.slice(0,10).map(f=>resRow(f)).join('')}</div>`:''}
   ${!favs.length&&!rec.length?`<p class="sec">Popular</p><div class="list">${frequent(8).map(f=>resRow(f)).join('')}</div>`:''}
   ${FS.onPick?'':`<p class="sec">Make it yours</p><div class="list"><button class="li" data-a="newcustom">${ic('plus')}<span class="t"><b>Custom food</b></span>${ic('chev','chev')}</button><button class="li" data-a="newrecipe">${ic('pot')}<span class="t"><b>New recipe from ingredients</b></span>${ic('chev','chev')}</button></div>`}`;return}
- if(!FS.onPick&&isMulti(q)){if(NLQ!==q){NL=parseNL(q);NLQ=q}el.innerHTML=`<div class="card logall"><div class="row" style="justify-content:space-between"><b>${ic('sparkle')} Log all</b><span class="fn">${NL.filter(x=>!x.miss).length} items · est.</span></div><div id="nlres"></div></div>`;renderNL(q);return}
+ if(!FS.onPick&&(isMulti(q)||/^\s*\d+(\.\d+)?\s*[a-z\u0900-\u097F]/i.test(q)&&parseNL(q).some(x=>!x.miss))){if(NLQ!==q){NL=parseNL(q);NLQ=q}el.innerHTML=`<div class="card logall"><div class="row" style="justify-content:space-between"><b>${ic('sparkle')} Log all</b><span class="fn">${NL.filter(x=>!x.miss).length} items · est.</span></div><div id="nlres"></div></div>`;renderNL(q);return}
  const r=search(q).filter(f=>!FS.onPick||(f.cat!=='recipe'&&f.cat!=='custom'));
  if(r.length){el.innerHTML=`<div class="list">${r.map(f=>resRow(f,q)).join('')}</div>${FS.onPick?'':`<button class="g block" data-a="newcustom" data-name="${esc(q)}">Didn’t find it? Create “${esc(q)}”</button>`}`;return}
  const near=nearby(q);
@@ -1557,8 +1570,8 @@ const CH={steps:el=>{const v=el.value===''?0:+el.value,e=vSteps(v);$('#stperr').
  groc:el=>{S.groc[el.dataset.k]=S.groc[el.dataset.k]||{};S.groc[el.dataset.k][el.dataset.id]=el.checked;save()},
  n_water:el=>{S.notif.water=el.checked;save()},n_meal:el=>{S.notif.meal=el.checked;save()},n_workout:el=>{S.notif.workout=el.checked;save()},n_plan:el=>{S.notif.plan=el.checked;S.rem.plan=el.checked;save()},n_backup:el=>{S.notif.backup=el.checked;save()},n_quiet:el=>{S.notif.quiet=el.checked;save()},
  import:el=>{const f=el.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);if(!d||!d.profile)throw 0;importSheet(d,f.name)}catch(e){toast('That file isn’t a FitTrack backup')}el.value=''})}};
-const ONCE=new Set(['nladd','phlog','phonly','hmerge','chcreate','chjoinok','cpok','doimport','exfeel','qadd','addprof','swprof','rsave','rshare','chshare','chinvite','export']),LASTA={};
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const sh=el.closest('#sheet');if(sh&&!sh.classList.contains('on'))return;const a=el.dataset.a,f=A[a];if(f){e.preventDefault();if(ONCE.has(a)){const n=Date.now();if(n-(LASTA[a]||0)<700)return;LASTA[a]=n}f(el)}});
+const ONCE=new Set(['nladd','phlog','phonly','hmerge','chcreate','chjoinok','cpok','doimport','exfeel','addprof','swprof','rsave','rshare','chshare','chinvite','export','trayadd','hxmerge','whsave']),LASTA={};// submit actions only; +/- taps are never throttled
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const sh=el.closest('#sheet');if(sh&&!sh.classList.contains('on'))return;const a=el.dataset.a,f=A[a];if(f){e.preventDefault();if(ONCE.has(a)){const n=Date.now();if(n-(LASTA[a]||0)<450)return;LASTA[a]=n}f(el)}});
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.matches('[role="button"][data-a]')){e.preventDefault();e.target.click()}});
 document.addEventListener('change',e=>{const el=e.target.closest('[data-ch]');if(el&&!el.closest('#ob')&&CH[el.dataset.ch])CH[el.dataset.ch](el)});
 // ---------- reminders ----------
@@ -1936,7 +1949,7 @@ function sTodayHTML(){const c=calc(),d=today(),m=dayMeals(d),eat=sum(m,'kcal'),p
  const c2=`<p class="sec">Water</p><div class="card water"><div class="row"><div class="wbar" role="progressbar" aria-valuemin="0" aria-valuemax="${c.water}" aria-valuenow="${dd.water}" aria-label="Water"><i style="height:${wpct*100}%"></i>${ic('drop')}</div>
  <div class="sp"><b class="num" style="font-size:28px;line-height:32px">${dd.water}</b><span class="mu"> / ${c.water} glasses</span><div class="fn">${R1(dd.water*.25)} L of ${R1(c.water*.25)} L · 250 ml each</div></div></div>
  <div class="row" style="margin-top:12px"><button class="s wbtn" data-a="water" data-v="1" aria-label="Add a glass of water">${ic('plus')} Glass</button><button class="ic" data-a="water" data-v="-1" aria-label="Remove a glass" ${dd.water?'':'disabled'}>−</button><span class="sp"></span></div></div>
- <p class="sec">Movement</p><div class="card col"><button class="li press wkline" data-a="towork"><span class="ico" style="background:var(--tint)">${ic('walk')}</span><span class="t"><b>${wkDone} of ${wkTot} workouts done this week</b><span>Week ${wk.w} of 12 · ${wk.ph.name}</span></span>${ic('chev','chev')}</button>
+ <p class="sec" style="display:flex;justify-content:space-between;align-items:center"><span>Movement</span><button class="g lnk" data-a="whist" style="text-transform:none;padding:0 4px;min-height:44px;min-width:44px">History ›</button></p><div class="card col"><button class="li press wkline" data-a="towork"><span class="ico" style="background:var(--tint)">${ic('walk')}</span><span class="t"><b>${wkDone} of ${wkTot} workouts done this week</b><span>Week ${wk.w} of 12 · ${wk.ph.name}</span></span>${ic('chev','chev')}</button>
  <div class="row"><div class="fld"><label class="f" for="stp">Steps today</label><input id="stp" type="number" inputmode="numeric" min="0" max="100000" value="${dd.steps||''}" placeholder="0" data-ch="steps" aria-describedby="stperr"></div><button class="s" data-a="qwork" style="margin-top:22px">${ic('plus')} Other activity</button></div>
  <p class="err" id="stperr" role="alert"></p></div>
  ${needBackup()?`<div class="card nudge warn"><h3>${ic('download')} Back up your data</h3><p class="mu" style="margin:0 0 12px">${S.lastBackup?`Last backup ${fmtD(S.lastBackup,{day:'numeric',month:'short'})}.`:'You haven’t backed up yet.'} Everything lives only on this device.</p><div class="row"><button class="sm" data-a="export">Export now</button><button class="sm s" data-a="snoozebackup">Later</button></div></div>`:''}
@@ -2086,7 +2099,7 @@ function parseHealth(input){// returns {rows:[{date,steps,active,weight,workouts
 function hType(t){t=String(t||'').toLowerCase();return/walk/.test(t)?'walking':/run/.test(t)?'running':/cycl|bike/.test(t)?'cycling':/yoga/.test(t)?'yoga':/swim/.test(t)?'swimming':/hiit|interval/.test(t)?'HIIT':/strength|weight|functional|core/.test(t)?'strength':/hik|stair|elliptical|dance/.test(t)?'walking':/train|cross|other|mixed/.test(t)?'other':'walking'}
 function mergeHealth(rows,full){let n=0;for(const r of rows){const d=day(r.date);if(full){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'))}if(r.steps!=null){d.steps=r.steps;n++}if(r.active!=null){d.active=r.active;n++}if(r.dist!=null)d.dist=r.dist;
   if(r.weight!=null){S.weights=S.weights.filter(w=>w.date!==r.date);S.weights.push({date:r.date,kg:r.weight});n++}
-  if(r.workouts.length){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'));for(const w of r.workouts){const type=MET[w.type]?w.type:'walking',kcal=w.kcal??Math.round(MET[type]*IM.moderate*curW()*w.min/60);S.workouts.push({id:Date.now()+Math.random(),date:r.date,type,min:w.min,int:'moderate',notes:'Apple Health'+(w.km?' · '+w.km+' km':''),kcal,src:'health'});n++}}}
+  if(r.workouts.length){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'));for(const w of r.workouts){const type=MET[w.type]?w.type:'walking',kcal=w.kcal??Math.round(MET[type]*IM.moderate*curW()*w.min/60);S.workouts.push({id:Date.now()+Math.random(),date:r.date,type,min:w.min,int:'moderate',notes:'Apple Health'+(w.km?' · '+w.km+' km':''),kcal,src:'health',km:w.km||undefined,time:w.time||undefined});n++}}}
  ST41();S.hsync.last=today();S.hsync.n=(S.hsync.n||0)+rows.length;save();return n}
 function healthPreview(res,from){const{rows,errs}=res;
  openSheet('Import from Apple Health',`${rows.length?`<p class="fn" style="margin:0 4px 8px">Check these numbers, then tap Merge. Same-day values replace older imports — nothing is duplicated.</p><div class="list">${rows.map(r=>`<div class="li"><span class="t"><b>${fmtD(r.date)}</b><span style="white-space:normal">${[r.steps!=null?r.steps.toLocaleString('en-IN')+' steps':'',r.active!=null?r.active+' active kcal':'',r.weight!=null?r.weight+' kg':'',...r.workouts.map(w=>w.min+' min '+w.type)].filter(Boolean).join(' · ')}</span></span></div>`).join('')}</div>`:'<p class="fn">Nothing valid to import.</p>'}
@@ -2276,28 +2289,28 @@ const flat=x=>x==null?x:(' '+x).slice(1);// copy out of the big chunk string so 
 const toKm=(v,u)=>u==='km'?v:u==='mi'?v*1.609344:u==='m'?v/1000:u==='ft'?v*.0003048:u==='yd'?v*.0009144:u==='cm'?v/1e5:null;
 const toKcal=(v,u)=>/^(kcal|Cal)$/.test(u)?v:u==='kJ'?v/4.184:u==='cal'?v/1000:null;
 const toKg=(v,u)=>u==='kg'?v:u==='lb'?v*.45359237:u==='st'?v*6.35029318:u==='g'?v/1000:null;
-function hxScanner(from,to){const st={carry:'',H:{steps:{},dist:{},act:{}},wt:{},wk:[],cur:null,recs:0,srcs:new Set()};
+function hxScanner(from,to,sel){sel=sel||{wk:1,steps:1,act:1,wt:1};const ok={steps:sel.steps,dist:sel.steps,act:sel.act,wt:sel.wt};const st={carry:'',H:{steps:{},dist:{},act:{}},wt:{},wk:[],cur:null,recs:0,srcs:new Set()};
  const RX=/<(Record|Workout|WorkoutStatistics)\s([^>]*)>|<\/Workout>/g;
  const addH=(k,d,h,src,v)=>{const D=st.H[k][d]||(st.H[k][d]={}),hh=D[h]||(D[h]={});hh[src]=(hh[src]||0)+v};
  const endWk=w=>{if(w&&w.date>=from&&w.date<=to)st.wk.push(w)};
  st.feed=text=>{const s=st.carry+text,last=s.lastIndexOf('>');if(last<0){st.carry=s.length>1e6?'':s;return}const body=last===s.length-1?s:s.slice(0,last+1);st.carry=s.slice(last+1);RX.lastIndex=0;let m;
   while((m=RX.exec(body))){if(!m[1]){endWk(st.cur);st.cur=null;continue}const a=m[2];
-   if(m[1]==='Record'){const k=HKT[hAttr(a,'type')];if(!k)continue;const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10);if(d<from||d>to)continue;const v=parseFloat(hAttr(a,'value'));if(!isFinite(v))continue;const u=hAttr(a,'unit')||'',src=(hAttr(a,'sourceName')||'?').replace(/&amp;/g,'&');st.recs++;if(!st.srcs.has(src))st.srcs.add(flat(src));
+   if(m[1]==='Record'){const k=HKT[hAttr(a,'type')];if(!k||!ok[k])continue;const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10);if(d<from||d>to)continue;const v=parseFloat(hAttr(a,'value'));if(!isFinite(v))continue;const u=hAttr(a,'unit')||'',src=(hAttr(a,'sourceName')||'?').replace(/&amp;/g,'&');st.recs++;if(!st.srcs.has(src))st.srcs.add(flat(src));
     if(k==='wt'){const kg=toKg(v,u);if(kg!=null&&kg>20&&kg<350){const o=st.wt[d];if(!o||sd>o.t)st.wt[d]={t:flat(sd),kg}}continue}
     const h=sd.slice(11,13),val=k==='steps'?v:k==='dist'?toKm(v,u):toKcal(v,u);if(val!=null)addH(k,d,h,src,val)}
-   else if(m[1]==='Workout'){endWk(st.cur);const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10),du=parseFloat(hAttr(a,'duration')),dun=hAttr(a,'durationUnit')||'min',min=dun==='hr'?du*60:dun==='s'?du/60:du;
-    const kc=parseFloat(hAttr(a,'totalEnergyBurned')),di=parseFloat(hAttr(a,'totalDistance'));const w={date:flat(d),type:hType((hAttr(a,'workoutActivityType')||'').replace('HKWorkoutActivityType','')),min:Math.round(min||0),kcal:isFinite(kc)?toKcal(kc,hAttr(a,'totalEnergyBurnedUnit')||'kcal'):null,km:isFinite(di)?toKm(di,hAttr(a,'totalDistanceUnit')||'km'):null};
+   else if(m[1]==='Workout'){endWk(st.cur);st.cur=null;if(!sel.wk)continue;const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10),du=parseFloat(hAttr(a,'duration')),dun=hAttr(a,'durationUnit')||'min',min=dun==='hr'?du*60:dun==='s'?du/60:du;
+    const kc=parseFloat(hAttr(a,'totalEnergyBurned')),di=parseFloat(hAttr(a,'totalDistance'));const w={date:flat(d),time:flat(sd.slice(11,16)),type:hType((hAttr(a,'workoutActivityType')||'').replace('HKWorkoutActivityType','')),min:Math.round(min||0),kcal:isFinite(kc)?toKcal(kc,hAttr(a,'totalEnergyBurnedUnit')||'kcal'):null,km:isFinite(di)?toKm(di,hAttr(a,'totalDistanceUnit')||'km'):null};
     if(a.endsWith('/'))endWk(w);else st.cur=w}
    else if(st.cur){const t=hAttr(a,'type')||'',sum=parseFloat(hAttr(a,'sum')),u=hAttr(a,'unit')||'';if(!isFinite(sum))continue;if(/ActiveEnergyBurned/.test(t)&&st.cur.kcal==null)st.cur.kcal=toKcal(sum,u);else if(/Distance/.test(t)&&st.cur.km==null)st.cur.km=toKm(sum,u)}}};
  st.result=()=>{// per hour: max across sources (Watch vs iPhone overlap), then sum hours
   const day={},tot=k=>{for(const[d,H]of Object.entries(st.H[k])){let s=0;for(const hh of Object.values(H))s+=Math.max(...Object.values(hh));(day[d]||(day[d]={date:d,workouts:[]}))[k]=s}};tot('steps');tot('dist');tot('act');
   for(const[d,o]of Object.entries(st.wt))(day[d]||(day[d]={date:d,workouts:[]})).wkg=o.kg;
-  for(const w of st.wk)if(w.min>=1&&w.min<=900)(day[w.date]||(day[w.date]={date:w.date,workouts:[]})).workouts.push({type:w.type,min:w.min,kcal:w.kcal!=null?Math.round(w.kcal):null,km:w.km!=null?R1(w.km):null});
+  for(const w of st.wk)if(w.min>=1&&w.min<=900)(day[w.date]||(day[w.date]={date:w.date,workouts:[]})).workouts.push({type:w.type,time:w.time,min:w.min,kcal:w.kcal!=null?Math.round(w.kcal):null,km:w.km!=null?R1(w.km):null});
   return Object.values(day).sort((a,b)=>a.date<b.date?-1:1).map(o=>({date:o.date,steps:o.steps!=null?Math.round(o.steps):null,dist:o.dist!=null?Math.round(o.dist*100)/100:null,active:o.act!=null?Math.round(o.act):null,weight:o.wkg!=null?R1(o.wkg):null,workouts:o.workouts}))};
  return st}
 // ---- driver: bytes -> text -> scanner, with progress + cancel ----
 const HX={cancel:false,busy:false};
-async function hxRun(file,from,to,onProg){const sc=hxScanner(from,to),td=new TextDecoder('utf-8');let isZip=false;
+async function hxRun(file,from,to,onProg,sel){const sc=hxScanner(from,to,sel),td=new TextDecoder('utf-8');let isZip=false;
  {const sig=new Uint8Array(await file.slice(0,4).arrayBuffer());isZip=sig[0]===0x50&&sig[1]===0x4b}
  const feedBytes=b=>sc.feed(td.decode(b,{stream:true}));const tick=()=>new Promise(r=>setTimeout(r,0));const chk=()=>{if(HX.cancel)throw new Error('cancelled')};
  const sliceLoop=async(start,end)=>{const CH=1<<19;for(let o=start;o<end;o+=CH){chk();feedBytes(new Uint8Array(await file.slice(o,Math.min(end,o+CH)).arrayBuffer()));onProg((o-start)/(end-start));await tick()}};
@@ -2309,28 +2322,107 @@ async function hxRun(file,from,to,onProg){const sc=hxScanner(from,to),td=new Tex
   else{const src=new Uint8Array(await file.slice(z.data,z.data+z.csize).arrayBuffer());const g=inflateRaw(src,feedBytes);let lastT=0;for(const p of g){chk();const n=performance.now();if(n-lastT>120){lastT=n;onProg(p);await tick()}}}}
  sc.feed(td.decode()+' ');onProg(1);const rows=sc.result();return{rows,recs:sc.recs,srcs:[...sc.srcs]}}
 // ---- UI ----
+function hxSel(){const d={wk:1,steps:1,act:1,wt:1};return S.hxSel?{...d,...S.hxSel}:d}
 function hxSheet(){const t=today();openSheet('Import Health export',`<p class="fn" style="white-space:normal;margin:0 4px 10px">Pick <b>export.zip</b> (or export.xml) from the Files app. It’s read on this phone in small pieces — nothing is uploaded.</p>
  <label class="fl">Import<select id="hxr"><option value="30">Last 30 days</option><option value="90" selected>Last 90 days</option><option value="180">Last 6 months</option><option value="365">Last year</option><option value="all">Everything</option></select></label>
- <label class="s block press hxpick" style="display:flex;align-items:center;justify-content:center;gap:8px">${ic('upload')} Choose export.zip<input id="hxf" type="file" accept=".zip,.xml,application/zip,application/xml,text/xml" hidden></label>
+ <p class="sec" style="margin-left:4px">Bring in</p><div class="list hxsel">${[['wk','Workouts'],['steps','Steps & distance'],['act','Active calories'],['wt','Weight']].map(([k,l])=>`<label class="li"><span class="t"><b>${l}</b></span><input type="checkbox" class="tgl" id="hxs_${k}" ${hxSel()[k]?'checked':''}></label>`).join('')}</div>
+ <label class="s block press hxpick" style="margin-top:12px;" style="display:flex;align-items:center;justify-content:center;gap:8px">${ic('upload')} Choose export.zip<input id="hxf" type="file" accept=".zip,.xml,application/zip,application/xml,text/xml" hidden></label>
  <div id="hxp" hidden><div class="bar" style="height:10px"><i id="hxbar" style="width:0%"></i></div><p class="fn" id="hxmsg" aria-live="polite">Starting…</p><button class="g block" data-a="hxcancel">Cancel</button></div><div id="hxerr" class="err" role="alert"></div>`,
- sh=>{const f=$('#hxf');f.onchange=()=>{const file=f.files&&f.files[0];if(file)hxStart(file)}})}
-async function hxStart(file){if(HX.busy)return;HX.busy=true;HX.cancel=false;const rv=$('#hxr').value,to=today(),from=rv==='all'?'0000-00-00':addD(to,-(+rv-1));
+ sh=>{sh.querySelectorAll('.hxsel input').forEach(i=>i.onchange=()=>{const s=hxSel();s[i.id.slice(4)]=i.checked?1:0;S.hxSel=s;save()});const f=$('#hxf');f.onchange=()=>{const file=f.files&&f.files[0];if(file)hxStart(file)}})}
+async function hxStart(file){if(HX.busy)return;{const s=hxSel();if(!s.wk&&!s.steps&&!s.act&&!s.wt){$('#hxerr').textContent='Pick at least one thing to import';$('#hxf').value='';return}}HX.busy=true;HX.cancel=false;const rv=$('#hxr').value,to=today(),from=rv==='all'?'0000-00-00':addD(to,-(+rv-1));
  $('#hxp').hidden=false;$('.hxpick').style.display='none';$('#hxr').disabled=true;$('#hxerr').textContent='';const t0=performance.now();const mb=(file.size/1048576).toFixed(file.size>1e7?0:1);
- try{const res=await hxRun(file,from,to,p=>{const b=$('#hxbar'),m=$('#hxmsg');if(b)b.style.width=Math.round(p*100)+'%';if(m)m.textContent=`Reading ${esc(file.name)} (${mb} MB) · ${Math.round(p*100)}%`});
+ try{const sel=hxSel();const res=await hxRun(file,from,to,p=>{const b=$('#hxbar'),m=$('#hxmsg');if(b)b.style.width=Math.round(p*100)+'%';if(m)m.textContent=`Reading ${esc(file.name)} (${mb} MB) · ${Math.round(p*100)}%`},sel);res.sel=sel;
   HX.busy=false;HX.last={...res,ms:Math.round(performance.now()-t0),from,to};hxPreview(res,from,to)}
  catch(e){HX.busy=false;if(String(e.message)==='cancelled'){closeSheet();toast('Import cancelled — nothing changed');return}const er=$('#hxerr');if(er)er.textContent=(e&&e.message&&!/^[A-Z][a-z]+Error/.test(e.name||'')?e.message:'Couldn’t read that file')+'. Make sure it’s the export.zip from the Health app.';const p=$('#hxp');if(p)p.hidden=true;const pk=$('.hxpick');if(pk)pk.style.display='';const r=$('#hxr');if(r)r.disabled=false}}
 function hxPreview(res,from,to){const R=res.rows,sd=R.filter(r=>r.steps!=null),W=R.filter(r=>r.weight!=null),wk=R.reduce((a,r)=>a+r.workouts.length,0),avg=sd.length?Math.round(sd.reduce((a,r)=>a+r.steps,0)/sd.length):0;HPEND=R;
  openSheet('Health export',R.length?`<div class="rgrid hxsum">${[[R.length,'days'],[avg.toLocaleString('en-IN'),'avg steps'],[W.length,'weigh-ins'],[wk,'workouts']].map(([v,l])=>`<div class="rs"><b class="num">${v}</b><span>${l}</span></div>`).join('')}</div>
  <p class="fn" style="white-space:normal;margin:10px 4px">${fmtD(R[0].date)} – ${fmtD(R[R.length-1].date)} · ${res.recs.toLocaleString('en-IN')} records from ${res.srcs.length} source${res.srcs.length!==1?'s':''} (${res.srcs.slice(0,3).map(esc).join(', ')}${res.srcs.length>3?'…':''}). Where iPhone and Watch overlap we count each hour once. ${W.length?'Latest weight: <b>'+W[W.length-1].weight+' kg</b>.':''}</p>
- <p class="fn" style="white-space:normal;margin:0 4px 10px">Merging replaces steps, active energy, weight and Health workouts on these ${R.length} days. Your food logs are not touched.</p><button class="block" data-a="hxmerge">${ic('check')} Merge ${R.length} days</button>`:`<p class="fn">No steps, weight or workouts found in that date range.</p><button class="s block" data-a="hximport">Try another range</button>`)}
+ <p class="fn" style="white-space:normal;margin:0 4px 10px">Merging replaces only ${[res.sel?.wk!==0&&'Health workouts',res.sel?.steps!==0&&'steps & distance',res.sel?.act!==0&&'active calories',res.sel?.wt!==0&&'weight'].filter(Boolean).join(', ')} on these ${R.length} days. Your food logs are not touched.</p><button class="block" data-a="hxmerge">${ic('check')} Merge ${R.length} days</button>`:`<p class="fn">No steps, weight or workouts found in that date range.</p><button class="s block" data-a="hximport">Try another range</button>`)}
 Object.assign(A,{hximport:()=>hxSheet(),hxcancel:()=>{HX.cancel=true;const m=$('#hxmsg');if(m)m.textContent='Cancelling…'},
- hxmerge:()=>{const rows=HPEND||[];HPEND=null;if(!rows.length)return;mergeHealth(rows,true);closeSheet();toast(`Imported ${rows.length} days from Apple Health`);render(true)}});
+ hxmerge:()=>{const rows=HPEND||[];HPEND=null;if(!rows.length)return;mergeHealth(rows,!!(HX.last&&HX.last.sel||{wk:1}).wk);closeSheet();toast(`Imported ${rows.length} days from Apple Health`);render(true)}});
 // steps + active energy chart on Progress (fed by imports and manual entry)
 function stepsChartHTML(){const t=today(),D=dRange(addD(t,-29),30),v=D.map(d=>+(S.days[d]||{}).steps||0);if(!v.some(Boolean))return'';const mx=Math.max(...v,10000),avg=Math.round(v.filter(Boolean).reduce((a,b)=>a+b,0)/v.filter(Boolean).length),W=300,H=90,bw=W/30;
  return`<p class="sec">Steps · last 30 days</p><div class="card"><svg viewBox="0 0 ${W} ${H+14}" class="stepchart" role="img" aria-label="Steps chart, average ${avg} a day"><line x1="0" x2="${W}" y1="${H-H*8000/mx}" y2="${H-H*8000/mx}" class="goal"/>${v.map((x,i)=>`<rect x="${i*bw+1}" y="${H-H*x/mx}" width="${bw-2}" height="${H*x/mx}" rx="2" class="${x>=8000?'hit':''}"/>`).join('')}<text x="0" y="${H+12}">${fmtD(D[0])}</text><text x="${W}" y="${H+12}" text-anchor="end">Today</text></svg><p class="fn" style="margin:6px 0 0">Average <b>${avg.toLocaleString('en-IN')}</b> steps a day · line = 8,000</p></div>`}
 {const sp=sProgressHTML;sProgressHTML=function(){return sp()+stepsChartHTML()}}
 {const sh=subHealth;subHealth=function(){return sh().replace('<p class="sec">Build the Shortcut','<p class="sec">Import everything at once</p><div class="card"><p class="fn" style="white-space:normal;margin:0 0 10px">Health app → your photo (top right) → <b>Export All Health Data</b> → <b>Export</b> → <b>Save to Files</b>. Then come back here.</p><button class="block" data-a="hximport">'+ic('upload')+' Import Health export</button></div><p class="sec">Build the Shortcut')}}
 
+
+// ================= 4.2 Workout History =================
+const WH={range:'month',type:'',src:''};
+const wSrc=w=>w.src==='health'?'health':/^(Plan:|From plan)/.test(w.notes||'')?'plan':'manual';
+const SRCL={manual:'Manual',plan:'Plan',health:'Apple Health'};
+const wKm=w=>w.km!=null?+w.km:(m=>m?+m[1]:0)(/([\d.]+) km/.exec(w.notes||''));
+const wTime=w=>w.time||(typeof w.id==='number'&&w.id>1e12&&iso(new Date(w.id))===w.date?new Date(w.id).toTimeString().slice(0,5):'');
+const WICO={walking:'walk',running:'walk',cycling:'refresh',strength:'bolt',HIIT:'flame',yoga:'leaf',swimming:'drop',other:'star'};
+const cap1=s=>s?s[0].toUpperCase()+s.slice(1):s;
+function whRange(){const t=today();return WH.range==='week'?monOf(t):WH.range==='month'?t.slice(0,8)+'01':WH.range==='3m'?addD(t,-90):'0000-00-00'}
+function whList(){const from=whRange(),t=today();return S.workouts.filter(w=>w.date>=from&&w.date<=t&&(!WH.type||w.type===WH.type)&&(!WH.src||wSrc(w)===WH.src)).sort((a,b)=>a.date<b.date?1:a.date>b.date?-1:(wTime(b)>wTime(a)?1:-1))}
+function whChart(L){const from=WH.range==='all'?(L.length?L[L.length-1].date:today()):whRange(),weeks=[];for(let m=monOf(today());m>=monOf(from)&&weeks.length<26;m=addD(m,-7))weeks.unshift(m);if(weeks.length<4)while(weeks.length<4)weeks.unshift(addD(weeks[0],-7));
+ const by={};L.forEach(w=>{const m=monOf(w.date);by[m]=(by[m]||0)+(+w.min||0)});const v=weeks.map(m=>by[m]||0),mx=Math.max(60,...v),W=300,H=80,bw=W/weeks.length;
+ return`<svg viewBox="0 0 ${W} ${H+14}" class="stepchart whchart" role="img" aria-label="Workout minutes per week">${v.map((x,i)=>`<rect x="${i*bw+1.5}" y="${H-H*x/mx}" width="${Math.max(2,bw-3)}" height="${H*x/mx}" rx="2" class="${x>=150?'hit':''}"><title>${fmtD(weeks[i])}: ${x} min</title></rect>`).join('')}<line x1="0" x2="${W}" y1="${H-H*150/mx}" y2="${H-H*150/mx}" class="goal"/><text x="0" y="${H+12}">${fmtD(weeks[0])}</text><text x="${W}" y="${H+12}" text-anchor="end">This week</text></svg><p class="fn" style="margin:4px 0 0">Minutes per week · line = 150 min (WHO)</p>`}
+let WHROWS=[];const kfmt=n=>n>=100000?Math.round(n/1000)+'k':n>=10000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n);
+function subWorkouts(){const L=whList(),from=whRange(),t=today(),mins=L.reduce((a,w)=>a+(+w.min||0),0),kc=L.reduce((a,w)=>a+(+w.kcal||0),0),km=L.reduce((a,w)=>a+wKm(w),0);
+ const sd=Object.entries(S.days).filter(([d,x])=>d>=from&&d<=t&&x&&x.steps>0),avgS=sd.length?Math.round(sd.reduce((a,[,x])=>a+x.steps,0)/sd.length):0;
+ const all=S.workouts,types=[...new Set(all.map(w=>w.type))].sort(),srcs=['manual','plan','health'].filter(s=>all.some(w=>wSrc(w)===s));
+ const chip=(a,v,cur,l)=>`<button class="chip ${cur===v?'on':''}" data-a="${a}" data-v="${v}" aria-pressed="${cur===v}">${l}</button>`;
+ // flat rows for virtual list: group header per week (≤3 months) or month (longer)
+ WHROWS=[];let g='';const byMonth=WH.range==='all'||WH.range==='3m'&&L.length>40;
+ for(const w of L){const k=byMonth?w.date.slice(0,7):monOf(w.date);if(k!==g){g=k;const grp=L.filter(x=>(byMonth?x.date.slice(0,7):monOf(x.date))===k);WHROWS.push({h:1,k,l:byMonth?new Date(k+'-15').toLocaleDateString('en-IN',{month:'long',year:'numeric'}):'Week of '+fmtD(k),n:grp.length,m:grp.reduce((a,x)=>a+(+x.min||0),0)})}WHROWS.push({w})}
+ return`${head('Workouts')}${LT('Workout history')}
+ <div class="seg" role="tablist">${[['week','This week'],['month','Month'],['3m','3 months'],['all','All']].map(([k,l])=>`<button class="${WH.range===k?'on':''}" role="tab" aria-selected="${WH.range===k}" data-a="whr" data-v="${k}">${l}</button>`).join('')}</div>
+ <div class="rgrid whsum" style="margin-top:12px">${[[L.length,'workouts'],[kfmt(mins),'minutes'],[kfmt(Math.round(kc)),'kcal'],[km>=1000?kfmt(Math.round(km)):R1(km),'km'],[avgS?kfmt(avgS):'—','avg steps']].map(([v,l])=>`<div class="rs"><b class="num">${v}</b><span>${l}</span></div>`).join('')}</div>
+ <div class="card" style="margin-top:12px">${whChart(L)}</div>
+ <div class="row w whf" style="gap:6px;margin-top:12px">${chip('wht','',WH.type,'All types')}${types.map(t=>chip('wht',t,WH.type,cap1(t))).join('')}</div>
+ ${srcs.length>1?`<div class="row w whf" style="gap:6px;margin-top:6px">${chip('whs','',WH.src,'All sources')}${srcs.map(s=>chip('whs',s,WH.src,SRCL[s])).join('')}</div>`:''}
+ ${L.length?`<div id="whv" class="whv" style="height:${whHeight()}px"></div>`:`<div class="card" style="margin-top:12px"><p class="fn" style="margin:0;white-space:normal">No workouts here yet. ${WH.type||WH.src?'Try clearing the filters.':'Log one with + or import from Apple Health.'}</p></div>`}`}
+const WHH=64,WHG=40;
+function whHeight(){return WHROWS.reduce((a,r)=>a+(r.h?WHG:WHH),0)}
+function whRow(r){if(r.h)return`<div class="whh"><span>${esc(r.l)}</span><span class="num">${r.n} · ${r.m} min</span></div>`;const w=r.w,s=wSrc(w),km=wKm(w),tm=wTime(w);
+ return`<button class="li press whr" data-a="whopen" data-id="${esc(String(w.id))}"><span class="ico" style="background:var(--tint)">${ic(WICO[w.type]||'star')}</span><span class="t"><b>${esc(cap1(w.type))}</b><span class="num">${fmtD(w.date)}${tm?' · '+tm:''} · ${w.min} min${w.kcal?' · '+Math.round(w.kcal)+' kcal':''}${km?' · '+R1(km)+' km':''}</span></span><span class="sbadge s-${s}">${SRCL[s]}</span></button>`}
+let WHRAF=0;
+function whPaint(){const box=$('#whv');if(!box)return;const top=box.getBoundingClientRect().top,vh=innerHeight,from=-top-vh,to=-top+vh*2;let y=0,html='';
+ for(const r of WHROWS){const h=r.h?WHG:WHH;if(y+h>=from&&y<=to)html+=`<div class="whi" style="top:${y}px;height:${h}px">${whRow(r)}</div>`;y+=h;if(y>to)break}
+ if(box.__h!==html){box.__h=html;box.innerHTML=html}}
+addEventListener('scroll',()=>{if(!$('#whv')||WHRAF)return;WHRAF=requestAnimationFrame(()=>{WHRAF=0;whPaint()})},{passive:true});
+addEventListener('resize',()=>{if($('#whv'))whPaint()});
+function whDetail(id){const w=S.workouts.find(x=>String(x.id)===id);if(!w)return;const s=wSrc(w),km=wKm(w),tm=wTime(w);
+ openSheet(esc(cap1(w.type)),`<div class="card col whd"><div class="row" style="gap:12px"><span class="ico big" style="background:var(--tint)">${ic(WICO[w.type]||'star')}</span><div><b>${fmtD(w.date)}${tm?' · '+tm:''}</b><div class="fn"><span class="sbadge s-${s}">${SRCL[s]}</span></div></div></div>
+ <div class="rgrid" style="grid-template-columns:repeat(3,minmax(0,1fr))">${[[w.min,'minutes'],[w.kcal?Math.round(w.kcal):'—','kcal'],[km?R1(km):'—','km']].map(([v,l])=>`<div class="rs"><b class="num">${v}</b><span>${l}</span></div>`).join('')}</div>
+ ${w.int?`<p class="fn" style="margin:0">Intensity: ${esc(w.int)}</p>`:''}${w.notes?`<p class="fn" style="margin:0;white-space:normal">${esc(w.notes)}</p>`:''}</div>
+ ${s==='manual'?`<div class="col" style="margin-top:12px"><button data-a="whedit" data-id="${esc(id)}">Edit</button><button class="s dang" data-a="whdel" data-id="${esc(id)}">Delete</button></div>`:`<p class="fn" style="white-space:normal;margin:12px 4px">${s==='health'?'Imported from Apple Health — re-importing updates it. Delete it in the Health app.':'Logged from your workout plan.'}</p>${s==='plan'?`<button class="s dang block" data-a="whdel" data-id="${esc(id)}">Delete</button>`:''}`}`)}
+function whEdit(id){const w=S.workouts.find(x=>String(x.id)===id);if(!w)return;
+ openSheet('Edit workout',`<label class="fl">Type<select id="whe_t">${Object.keys(MET).map(k=>`<option value="${k}" ${k===w.type?'selected':''}>${cap1(k)}</option>`).join('')}</select></label>
+ <label class="fl">Minutes<input id="whe_m" type="number" inputmode="numeric" min="1" max="600" value="${w.min}"></label>
+ <label class="fl">Intensity<select id="whe_i">${['low','moderate','high'].map(k=>`<option ${k===w.int?'selected':''}>${k}</option>`).join('')}</select></label>
+ <label class="fl">Date<input id="whe_d" type="date" max="${today()}" value="${w.date}"></label><div id="whe_err" class="err" role="alert"></div><button class="block" data-a="whsave" data-id="${esc(id)}">Save</button>`)}
+Object.assign(A,{whist:()=>navTo(()=>{TAB='more';SUB='workouts';render();requestAnimationFrame(whPaint)},'fwd'),
+ whr:el=>{WH.range=el.dataset.v;render(true)},wht:el=>{WH.type=el.dataset.v;render(true)},whs:el=>{WH.src=el.dataset.v;render(true)},
+ whopen:el=>whDetail(el.dataset.id),whedit:el=>whEdit(el.dataset.id),
+ whsave:el=>{const w=S.workouts.find(x=>String(x.id)===el.dataset.id);if(!w)return;const t=$('#whe_t').value,m=+$('#whe_m').value,i=$('#whe_i').value,d=$('#whe_d').value;
+  const e=vWorkMin(m)||(!isoOK(d)?'Pick a date':d>today()?'Workouts can’t be in the future.':'');if(e)return $('#whe_err').textContent=e;
+  Object.assign(w,{type:t,min:m,int:i,date:d,kcal:Math.round(MET[t]*IM[i]*curW()*m/60)});save();closeSheet();toast('Workout updated');render(true)},
+ whdel:el=>{const id=el.dataset.id;closeSheet();delWithUndo('workouts',x=>String(x.id)===id,'Workout')}});
+{const sm=sMoreHTML;sMoreHTML=function(){if(SUB==='workouts')return subWorkouts();const h=sm();if(SUB)return h;return h.replace('<p class="sec">Progress & friends</p><div class="list">',`<p class="sec">Progress & friends</p><div class="list"><button class="li press" data-a="whist"><span class="ico" style="background:var(--tint)">${ic('walk')}</span><span class="t"><b>Workout history</b><span>${S.workouts.length} workouts · filters, charts</span></span>${ic('chev','chev')}</button>`)}}
+{const sp=sProgressHTML;sProgressHTML=function(){const h=sp(),wk=S.workouts.filter(w=>w.date>=monOf(today())&&w.date<=today()),m=wk.reduce((a,w)=>a+(+w.min||0),0);
+ const card=`<p class="sec">Workouts</p><button class="card press whcard" data-a="whist"><span class="ico" style="background:var(--tint)">${ic('walk')}</span><span class="t"><b>${wk.length} workout${wk.length!==1?'s':''} · ${m} min this week</b><span>${S.workouts.length} in total · see history</span></span>${ic('chev','chev')}</button>`;
+ const i=h.indexOf('<p class="sec">Steps · last 30 days');return i>0?h.slice(0,i)+card+h.slice(i):h+card}}
+{const r0=render0;render0=function(k){r0(k);if(SUB==='workouts'&&TAB==='more')whPaint()}}
+
+
+// ================= Food tray: tap + on several foods (or the same one again), adjust amounts, add all at once =================
+const TRAY={m:new Map(),date:'',meal:''};
+const trayCtx=()=>$('#fq')?{date:FS.date,meal:FS.meal}:{date:today(),meal:guessMeal()};
+function trayAdd(id,d=1){const f=food(id);if(!f)return;const c=trayCtx();if(TRAY.date&&TRAY.date!==c.date)TRAY.m.clear();TRAY.date=c.date;const n=Math.max(0,Math.min(99,(TRAY.m.get(id)||0)+d));n?TRAY.m.set(id,n):TRAY.m.delete(id);haptic(6);trayDraw()}
+function trayItems(){return[...TRAY.m].map(([id,n])=>{const f=food(id);if(!f)return null;const q=R1(defQ(f)*n);return{id,n,f,q,nu:nut(f,f.unit,q)}}).filter(Boolean)}
+function trayDraw(){const bd=$('#sheet.on .bd');document.querySelectorAll('#sheet [data-a=qadd]').forEach(b=>{const n=TRAY.m.get(b.dataset.id)||0;let s=b.querySelector('.cnt');if(n){if(!s){s=document.createElement('span');s.className='cnt';b.appendChild(s)}s.textContent='×'+n;b.classList.add('has')}else{s&&s.remove();b.classList.remove('has')}});
+ if(!bd||FS&&FS.onPick&&$('#fq'))return;let t=$('#tray');const L=trayItems();if(!L.length){t&&t.remove();return}
+ if(!t){t=document.createElement('div');t.id='tray';t.className='tray';bd.appendChild(t)}const c=trayCtx(),k=Math.round(L.reduce((a,x)=>a+x.nu.kcal,0));
+ t.innerHTML=`<div class="trl">${L.map(x=>`<div class="tri"><span class="t"><b>${esc(x.f.name)}</b><span class="num">${x.f.unit==='g'?x.q+' g':frac(x.q)+' '+esc(unitName(x.f,x.f.unit))} · ${x.nu.kcal} kcal</span></span><button class="ic sm" data-a="trm" data-id="${esc(x.id)}" aria-label="Less ${esc(x.f.name)}">−</button><b class="num trn" aria-live="polite">${x.n}</b><button class="ic sm" data-a="trp" data-id="${esc(x.id)}" aria-label="More ${esc(x.f.name)}">+</button></div>`).join('')}</div>
+ <button class="block" data-a="trayadd">${ic('check')} Add ${L.length} item${L.length>1?'s':''} · ${k} kcal to ${MTL[c.meal].toLowerCase()}</button>`}
+Object.assign(A,{qadd:el=>{if(FS&&FS.onPick&&$('#fq'))return;trayAdd(el.dataset.id,1)},trp:el=>trayAdd(el.dataset.id,1),trm:el=>trayAdd(el.dataset.id,-1),
+ trayadd:()=>{const L=trayItems();if(!L.length)return;const c=trayCtx();const added=L.map(x=>pushMeal(c.date,c.meal,x.f,x.f.unit,x.q,'normal',x.nu));TRAY.m.clear();award(10,'meal');closeSheet();toast(`${added.length} item${added.length>1?'s':''} added to ${MTL[c.meal].toLowerCase()}`,()=>{S.meals=S.meals.filter(m=>!added.includes(m));save();render(true)})}});
+{const fr=foodResults;foodResults=function(){fr();trayDraw()}}
+{const qs=quickSheet;quickSheet=function(){qs();trayDraw()}}
 // ---------- init ----------
 ST41();freezeTick();S.lastOpen=today();autoReport();save();render();if(!S.onboarded)onboard();
 {const q=new URLSearchParams(location.search).get('action');if(q&&S.onboarded){if(q==='log')setTimeout(quickSheet,300);else if(q==='water')A.water({dataset:{v:'1'}})}}

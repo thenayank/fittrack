@@ -289,6 +289,8 @@ img.mph{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:none;mar
 .kbd .sheet.on .bd{padding-bottom:24px;scroll-padding-bottom:24px}
 .kbd #ob{overflow:auto}
 .kbd .phbar{position:static}
+.stepchart{width:100%;height:auto;display:block}.stepchart rect{fill:color-mix(in srgb,var(--tint) 45%,transparent)}.stepchart rect.hit{fill:var(--tint)}.stepchart .goal{stroke:var(--gold);stroke-dasharray:3 3;stroke-width:1}.stepchart text{font:500 9px var(--font);fill:var(--mu)}
+.hxsum{grid-template-columns:repeat(4,minmax(0,1fr))}.hxsum .rs{background:var(--fill);color:var(--tx)}
 </style></head><body>
 <main id="main"></main>
 <nav class="tabbar" id="tabbar" aria-label="Tabs"></nav>
@@ -2081,10 +2083,10 @@ function parseHealth(input){// returns {rows:[{date,steps,active,weight,workouts
   if(r.steps==null&&r.active==null&&r.weight==null&&!r.workouts.length){errs.push(`${date}: no values found`);continue}
   const ex=rows.find(x=>x.date===date);if(ex)Object.assign(ex,r,{workouts:ex.workouts.concat(r.workouts)});else rows.push(r)}
  rows.sort((a,b)=>a.date<b.date?-1:1);return{rows,errs}}
-function hType(t){t=String(t||'').toLowerCase();return/walk/.test(t)?'walking':/run/.test(t)?'running':/cycl|bike/.test(t)?'cycling':/yoga/.test(t)?'yoga':/swim/.test(t)?'swimming':/strength|weight|functional|hiit|train/.test(t)?'strength':'walking'}
-function mergeHealth(rows){let n=0;for(const r of rows){const d=day(r.date);if(r.steps!=null){d.steps=r.steps;n++}if(r.active!=null){d.active=r.active;n++}
+function hType(t){t=String(t||'').toLowerCase();return/walk/.test(t)?'walking':/run/.test(t)?'running':/cycl|bike/.test(t)?'cycling':/yoga/.test(t)?'yoga':/swim/.test(t)?'swimming':/hiit|interval/.test(t)?'HIIT':/strength|weight|functional|core/.test(t)?'strength':/hik|stair|elliptical|dance/.test(t)?'walking':/train|cross|other|mixed/.test(t)?'other':'walking'}
+function mergeHealth(rows,full){let n=0;for(const r of rows){const d=day(r.date);if(full){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'))}if(r.steps!=null){d.steps=r.steps;n++}if(r.active!=null){d.active=r.active;n++}if(r.dist!=null)d.dist=r.dist;
   if(r.weight!=null){S.weights=S.weights.filter(w=>w.date!==r.date);S.weights.push({date:r.date,kg:r.weight});n++}
-  if(r.workouts.length){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'));for(const w of r.workouts){const type=MET[w.type]?w.type:'walking',kcal=w.kcal??Math.round(MET[type]*IM.moderate*curW()*w.min/60);S.workouts.push({id:Date.now()+Math.random(),date:r.date,type,min:w.min,int:'moderate',notes:'Apple Health',kcal,src:'health'});n++}}}
+  if(r.workouts.length){S.workouts=S.workouts.filter(w=>!(w.date===r.date&&w.src==='health'));for(const w of r.workouts){const type=MET[w.type]?w.type:'walking',kcal=w.kcal??Math.round(MET[type]*IM.moderate*curW()*w.min/60);S.workouts.push({id:Date.now()+Math.random(),date:r.date,type,min:w.min,int:'moderate',notes:'Apple Health'+(w.km?' · '+w.km+' km':''),kcal,src:'health'});n++}}}
  ST41();S.hsync.last=today();S.hsync.n=(S.hsync.n||0)+rows.length;save();return n}
 function healthPreview(res,from){const{rows,errs}=res;
  openSheet('Import from Apple Health',`${rows.length?`<p class="fn" style="margin:0 4px 8px">Check these numbers, then tap Merge. Same-day values replace older imports — nothing is duplicated.</p><div class="list">${rows.map(r=>`<div class="li"><span class="t"><b>${fmtD(r.date)}</b><span style="white-space:normal">${[r.steps!=null?r.steps.toLocaleString('en-IN')+' steps':'',r.active!=null?r.active+' active kcal':'',r.weight!=null?r.weight+' kg':'',...r.workouts.map(w=>w.min+' min '+w.type)].filter(Boolean).join(' · ')}</span></span></div>`).join('')}</div>`:'<p class="fn">Nothing valid to import.</p>'}
@@ -2234,6 +2236,101 @@ function handleURL(){const q=new URLSearchParams(location.search);let used=false
  const ch=q.get('ch');if(ch){used=true;const c=chDecode(ch);if(c)setTimeout(()=>joinCh(c),300);else toast('That invite link is damaged')}
  const cp=q.get('cp');if(cp){used=true;setTimeout(()=>{if(applyProg(cp)){const o=progDecode(cp);CHV=o.c;navTo(()=>{TAB='more';SUB='challenges';render()},'fwd')}},300)}
  if(used)try{history.replaceState(null,'',location.pathname+location.hash)}catch(e){}}
+
+// ================= 4.1.1 Apple Health export.zip / export.xml import (fully on-device, streaming) =================
+// ---- tiny streaming-output raw-inflate (fallback when DecompressionStream('deflate-raw') is missing) ----
+const INF={lb:[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258],le:[0,0,0,0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,5,5,5,5,0],
+ db:[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577],de:[0,0,0,0,1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12,13,13],
+ ord:[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15]};
+function infTree(len,n){const c=new Uint16Array(16),o=new Uint16Array(16),s=new Uint16Array(n);for(let i=0;i<n;i++)c[len[i]]++;c[0]=0;for(let i=1;i<16;i++)o[i]=o[i-1]+c[i-1];for(let i=0;i<n;i++)if(len[i])s[o[len[i]]++]=i;return{c,s}}
+function* inflateRaw(src,emit){let pos=0,acc=0,nb=0;const W=32768,buf=new Uint8Array(W*8);let bp=0,es=0;
+ const need=n=>{while(nb<n){if(pos>=src.length){if(pos++>src.length+4)throw new Error('Unexpected end of data')}else acc|=src[pos++]<<nb;nb+=8}};
+ const bits=n=>{if(!n)return 0;need(n);const v=acc&((1<<n)-1);acc>>>=n;nb-=n;return v};
+ const sym=t=>{let code=0,first=0,idx=0;for(let l=1;l<16;l++){code|=bits(1);const cnt=t.c[l];if(code-cnt<first)return t.s[idx+(code-first)];idx+=cnt;first+=cnt;first<<=1;code<<=1}throw new Error('Bad Huffman code')};
+ let flushed=false;const flush=()=>{emit(buf.slice(es,bp));buf.copyWithin(0,bp-W,bp);bp=W;es=W;flushed=true};
+ let fl=null,fd=null,last=0;
+ do{last=bits(1);const type=bits(2);
+  if(type===0){const r=nb&7;acc>>>=r;nb-=r;const len=bits(16),nlen=bits(16);if((len^0xffff)!==nlen)throw new Error('Bad stored block');for(let i=0;i<len;i++){buf[bp++]=nb?bits(8):src[pos++];if(bp===buf.length)flush()}}
+  else{let lt,dt;if(type===1){if(!fl){const l=new Uint8Array(288);l.fill(8,0,144);l.fill(9,144,256);l.fill(7,256,280);l.fill(8,280,288);fl=infTree(l,288);fd=infTree(new Uint8Array(30).fill(5),30)}lt=fl;dt=fd}
+   else if(type===2){const hl=bits(5)+257,hd=bits(5)+1,hc=bits(4)+4,cl=new Uint8Array(19);for(let i=0;i<hc;i++)cl[INF.ord[i]]=bits(3);const ct=infTree(cl,19),L=new Uint8Array(hl+hd);
+    for(let i=0;i<hl+hd;){const s=sym(ct);if(s<16)L[i++]=s;else{let r,v=0;if(s===16){if(!i)throw new Error('Bad lengths');v=L[i-1];r=3+bits(2)}else if(s===17)r=3+bits(3);else r=11+bits(7);while(r--)L[i++]=v}}
+    lt=infTree(L.subarray(0,hl),hl);dt=infTree(L.subarray(hl),hd)}else throw new Error('Bad block type');
+   for(;;){const s=sym(lt);if(s<256){buf[bp++]=s;if(bp===buf.length)flush()}else if(s===256)break;else{const k=s-257,len=INF.lb[k]+bits(INF.le[k]),dsym=sym(dt),dist=INF.db[dsym]+bits(INF.de[dsym]);if(dist>bp)throw new Error('Bad distance');for(let i=0;i<len;i++){buf[bp]=buf[bp-dist];bp++;if(bp===buf.length)flush()}}}}
+  if(flushed){flushed=false;yield pos/src.length}}while(!last);
+ if(bp>es)emit(buf.slice(es,bp))}
+// ---- ZIP: find export.xml via central directory (File.slice, never whole file) ----
+async function zipFind(file){const tail=Math.min(file.size,65557+20),off0=file.size-tail,b=new DataView(await file.slice(off0).arrayBuffer());let e=-1;for(let i=b.byteLength-22;i>=0;i--)if(b.getUint32(i,true)===0x06054b50){e=i;break}if(e<0)throw new Error('This isn’t a zip file');
+ let n=b.getUint16(e+10,true),cdSize=b.getUint32(e+12,true),cdOff=b.getUint32(e+16,true);
+ if((cdOff===0xFFFFFFFF||n===0xFFFF||cdSize===0xFFFFFFFF)&&e>=20&&b.getUint32(e-20,true)===0x07064b50){const zo=Number(b.getBigUint64(e-20+8,true)),z=new DataView(await file.slice(zo,zo+56).arrayBuffer());n=Number(z.getBigUint64(32,true));cdSize=Number(z.getBigUint64(40,true));cdOff=Number(z.getBigUint64(48,true))}
+ const cd=new DataView(await file.slice(cdOff,cdOff+cdSize).arrayBuffer()),dec=new TextDecoder();let p=0,best=null;
+ for(let i=0;i<n&&p+46<=cd.byteLength;i++){if(cd.getUint32(p,true)!==0x02014b50)break;const method=cd.getUint16(p+10,true);let csize=cd.getUint32(p+20,true),usize=cd.getUint32(p+24,true),off=cd.getUint32(p+42,true);const nl=cd.getUint16(p+28,true),xl=cd.getUint16(p+30,true),cl=cd.getUint16(p+32,true);
+  const name=dec.decode(new Uint8Array(cd.buffer,cd.byteOffset+p+46,nl));let x=p+46+nl;const xe=x+xl;
+  while(x+4<=xe){const id=cd.getUint16(x,true),sz=cd.getUint16(x+2,true);if(id===1){let q=x+4;if(usize===0xFFFFFFFF){usize=Number(cd.getBigUint64(q,true));q+=8}if(csize===0xFFFFFFFF){csize=Number(cd.getBigUint64(q,true));q+=8}if(off===0xFFFFFFFF){off=Number(cd.getBigUint64(q,true))}}x+=4+sz}
+  if(/(^|\/)export\.xml$/i.test(name)&&!/__MACOSX/.test(name))best={name,method,csize,usize,off};p=xe+cl}
+ if(!best)throw new Error('No export.xml inside this zip');if(best.method!==0&&best.method!==8)throw new Error('Unsupported zip compression');
+ const lh=new DataView(await file.slice(best.off,best.off+30).arrayBuffer());if(lh.getUint32(0,true)!==0x04034b50)throw new Error('Damaged zip file');best.data=best.off+30+lh.getUint16(26,true)+lh.getUint16(28,true);return best}
+// ---- streaming scanner for export.xml ----
+const HKT={'HKQuantityTypeIdentifierStepCount':'steps','HKQuantityTypeIdentifierDistanceWalkingRunning':'dist','HKQuantityTypeIdentifierActiveEnergyBurned':'act','HKQuantityTypeIdentifierBodyMass':'wt'};
+const hAttr=(a,k)=>{let i=a.indexOf(k+'="');while(i>0&&!/\s/.test(a[i-1]))i=a.indexOf(k+'="',i+1);if(i<0)return null;const s=i+k.length+2;return a.slice(s,a.indexOf('"',s))};
+const flat=x=>x==null?x:(' '+x).slice(1);// copy out of the big chunk string so it can be garbage-collected
+const toKm=(v,u)=>u==='km'?v:u==='mi'?v*1.609344:u==='m'?v/1000:u==='ft'?v*.0003048:u==='yd'?v*.0009144:u==='cm'?v/1e5:null;
+const toKcal=(v,u)=>/^(kcal|Cal)$/.test(u)?v:u==='kJ'?v/4.184:u==='cal'?v/1000:null;
+const toKg=(v,u)=>u==='kg'?v:u==='lb'?v*.45359237:u==='st'?v*6.35029318:u==='g'?v/1000:null;
+function hxScanner(from,to){const st={carry:'',H:{steps:{},dist:{},act:{}},wt:{},wk:[],cur:null,recs:0,srcs:new Set()};
+ const RX=/<(Record|Workout|WorkoutStatistics)\s([^>]*)>|<\/Workout>/g;
+ const addH=(k,d,h,src,v)=>{const D=st.H[k][d]||(st.H[k][d]={}),hh=D[h]||(D[h]={});hh[src]=(hh[src]||0)+v};
+ const endWk=w=>{if(w&&w.date>=from&&w.date<=to)st.wk.push(w)};
+ st.feed=text=>{const s=st.carry+text,last=s.lastIndexOf('>');if(last<0){st.carry=s.length>1e6?'':s;return}const body=last===s.length-1?s:s.slice(0,last+1);st.carry=s.slice(last+1);RX.lastIndex=0;let m;
+  while((m=RX.exec(body))){if(!m[1]){endWk(st.cur);st.cur=null;continue}const a=m[2];
+   if(m[1]==='Record'){const k=HKT[hAttr(a,'type')];if(!k)continue;const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10);if(d<from||d>to)continue;const v=parseFloat(hAttr(a,'value'));if(!isFinite(v))continue;const u=hAttr(a,'unit')||'',src=(hAttr(a,'sourceName')||'?').replace(/&amp;/g,'&');st.recs++;if(!st.srcs.has(src))st.srcs.add(flat(src));
+    if(k==='wt'){const kg=toKg(v,u);if(kg!=null&&kg>20&&kg<350){const o=st.wt[d];if(!o||sd>o.t)st.wt[d]={t:flat(sd),kg}}continue}
+    const h=sd.slice(11,13),val=k==='steps'?v:k==='dist'?toKm(v,u):toKcal(v,u);if(val!=null)addH(k,d,h,src,val)}
+   else if(m[1]==='Workout'){endWk(st.cur);const sd=hAttr(a,'startDate')||'',d=sd.slice(0,10),du=parseFloat(hAttr(a,'duration')),dun=hAttr(a,'durationUnit')||'min',min=dun==='hr'?du*60:dun==='s'?du/60:du;
+    const kc=parseFloat(hAttr(a,'totalEnergyBurned')),di=parseFloat(hAttr(a,'totalDistance'));const w={date:flat(d),type:hType((hAttr(a,'workoutActivityType')||'').replace('HKWorkoutActivityType','')),min:Math.round(min||0),kcal:isFinite(kc)?toKcal(kc,hAttr(a,'totalEnergyBurnedUnit')||'kcal'):null,km:isFinite(di)?toKm(di,hAttr(a,'totalDistanceUnit')||'km'):null};
+    if(a.endsWith('/'))endWk(w);else st.cur=w}
+   else if(st.cur){const t=hAttr(a,'type')||'',sum=parseFloat(hAttr(a,'sum')),u=hAttr(a,'unit')||'';if(!isFinite(sum))continue;if(/ActiveEnergyBurned/.test(t)&&st.cur.kcal==null)st.cur.kcal=toKcal(sum,u);else if(/Distance/.test(t)&&st.cur.km==null)st.cur.km=toKm(sum,u)}}};
+ st.result=()=>{// per hour: max across sources (Watch vs iPhone overlap), then sum hours
+  const day={},tot=k=>{for(const[d,H]of Object.entries(st.H[k])){let s=0;for(const hh of Object.values(H))s+=Math.max(...Object.values(hh));(day[d]||(day[d]={date:d,workouts:[]}))[k]=s}};tot('steps');tot('dist');tot('act');
+  for(const[d,o]of Object.entries(st.wt))(day[d]||(day[d]={date:d,workouts:[]})).wkg=o.kg;
+  for(const w of st.wk)if(w.min>=1&&w.min<=900)(day[w.date]||(day[w.date]={date:w.date,workouts:[]})).workouts.push({type:w.type,min:w.min,kcal:w.kcal!=null?Math.round(w.kcal):null,km:w.km!=null?R1(w.km):null});
+  return Object.values(day).sort((a,b)=>a.date<b.date?-1:1).map(o=>({date:o.date,steps:o.steps!=null?Math.round(o.steps):null,dist:o.dist!=null?Math.round(o.dist*100)/100:null,active:o.act!=null?Math.round(o.act):null,weight:o.wkg!=null?R1(o.wkg):null,workouts:o.workouts}))};
+ return st}
+// ---- driver: bytes -> text -> scanner, with progress + cancel ----
+const HX={cancel:false,busy:false};
+async function hxRun(file,from,to,onProg){const sc=hxScanner(from,to),td=new TextDecoder('utf-8');let isZip=false;
+ {const sig=new Uint8Array(await file.slice(0,4).arrayBuffer());isZip=sig[0]===0x50&&sig[1]===0x4b}
+ const feedBytes=b=>sc.feed(td.decode(b,{stream:true}));const tick=()=>new Promise(r=>setTimeout(r,0));const chk=()=>{if(HX.cancel)throw new Error('cancelled')};
+ const sliceLoop=async(start,end)=>{const CH=1<<19;for(let o=start;o<end;o+=CH){chk();feedBytes(new Uint8Array(await file.slice(o,Math.min(end,o+CH)).arrayBuffer()));onProg((o-start)/(end-start));await tick()}};
+ if(!isZip)await sliceLoop(0,file.size);
+ else{const z=await zipFind(file);if(z.method===0)await sliceLoop(z.data,z.data+z.csize);
+  else if(typeof DecompressionStream==='function'&&!window.__noDS&&(()=>{try{new DecompressionStream('deflate-raw');return true}catch(e){return false}})()){
+   const rd=file.slice(z.data,z.data+z.csize).stream().pipeThrough(new DecompressionStream('deflate-raw')).getReader();let got=0,lastT=0;HX.gcAt=0;
+   try{for(;;){if(HX.cancel){await rd.cancel().catch(()=>{});chk()}const{done,value}=await rd.read();if(done)break;got+=value.length;feedBytes(value);const n=performance.now();if(got-(HX.gcAt||0)>(4<<20)){HX.gcAt=got;await tick()}if(n-lastT>120){lastT=n;onProg(z.usize?got/z.usize:0);await tick()}}}finally{try{rd.releaseLock()}catch(e){}}}
+  else{const src=new Uint8Array(await file.slice(z.data,z.data+z.csize).arrayBuffer());const g=inflateRaw(src,feedBytes);let lastT=0;for(const p of g){chk();const n=performance.now();if(n-lastT>120){lastT=n;onProg(p);await tick()}}}}
+ sc.feed(td.decode()+' ');onProg(1);const rows=sc.result();return{rows,recs:sc.recs,srcs:[...sc.srcs]}}
+// ---- UI ----
+function hxSheet(){const t=today();openSheet('Import Health export',`<p class="fn" style="white-space:normal;margin:0 4px 10px">Pick <b>export.zip</b> (or export.xml) from the Files app. It’s read on this phone in small pieces — nothing is uploaded.</p>
+ <label class="fl">Import<select id="hxr"><option value="30">Last 30 days</option><option value="90" selected>Last 90 days</option><option value="180">Last 6 months</option><option value="365">Last year</option><option value="all">Everything</option></select></label>
+ <label class="s block press hxpick" style="display:flex;align-items:center;justify-content:center;gap:8px">${ic('upload')} Choose export.zip<input id="hxf" type="file" accept=".zip,.xml,application/zip,application/xml,text/xml" hidden></label>
+ <div id="hxp" hidden><div class="bar" style="height:10px"><i id="hxbar" style="width:0%"></i></div><p class="fn" id="hxmsg" aria-live="polite">Starting…</p><button class="g block" data-a="hxcancel">Cancel</button></div><div id="hxerr" class="err" role="alert"></div>`,
+ sh=>{const f=$('#hxf');f.onchange=()=>{const file=f.files&&f.files[0];if(file)hxStart(file)}})}
+async function hxStart(file){if(HX.busy)return;HX.busy=true;HX.cancel=false;const rv=$('#hxr').value,to=today(),from=rv==='all'?'0000-00-00':addD(to,-(+rv-1));
+ $('#hxp').hidden=false;$('.hxpick').style.display='none';$('#hxr').disabled=true;$('#hxerr').textContent='';const t0=performance.now();const mb=(file.size/1048576).toFixed(file.size>1e7?0:1);
+ try{const res=await hxRun(file,from,to,p=>{const b=$('#hxbar'),m=$('#hxmsg');if(b)b.style.width=Math.round(p*100)+'%';if(m)m.textContent=`Reading ${esc(file.name)} (${mb} MB) · ${Math.round(p*100)}%`});
+  HX.busy=false;HX.last={...res,ms:Math.round(performance.now()-t0),from,to};hxPreview(res,from,to)}
+ catch(e){HX.busy=false;if(String(e.message)==='cancelled'){closeSheet();toast('Import cancelled — nothing changed');return}const er=$('#hxerr');if(er)er.textContent=(e&&e.message&&!/^[A-Z][a-z]+Error/.test(e.name||'')?e.message:'Couldn’t read that file')+'. Make sure it’s the export.zip from the Health app.';const p=$('#hxp');if(p)p.hidden=true;const pk=$('.hxpick');if(pk)pk.style.display='';const r=$('#hxr');if(r)r.disabled=false}}
+function hxPreview(res,from,to){const R=res.rows,sd=R.filter(r=>r.steps!=null),W=R.filter(r=>r.weight!=null),wk=R.reduce((a,r)=>a+r.workouts.length,0),avg=sd.length?Math.round(sd.reduce((a,r)=>a+r.steps,0)/sd.length):0;HPEND=R;
+ openSheet('Health export',R.length?`<div class="rgrid hxsum">${[[R.length,'days'],[avg.toLocaleString('en-IN'),'avg steps'],[W.length,'weigh-ins'],[wk,'workouts']].map(([v,l])=>`<div class="rs"><b class="num">${v}</b><span>${l}</span></div>`).join('')}</div>
+ <p class="fn" style="white-space:normal;margin:10px 4px">${fmtD(R[0].date)} – ${fmtD(R[R.length-1].date)} · ${res.recs.toLocaleString('en-IN')} records from ${res.srcs.length} source${res.srcs.length!==1?'s':''} (${res.srcs.slice(0,3).map(esc).join(', ')}${res.srcs.length>3?'…':''}). Where iPhone and Watch overlap we count each hour once. ${W.length?'Latest weight: <b>'+W[W.length-1].weight+' kg</b>.':''}</p>
+ <p class="fn" style="white-space:normal;margin:0 4px 10px">Merging replaces steps, active energy, weight and Health workouts on these ${R.length} days. Your food logs are not touched.</p><button class="block" data-a="hxmerge">${ic('check')} Merge ${R.length} days</button>`:`<p class="fn">No steps, weight or workouts found in that date range.</p><button class="s block" data-a="hximport">Try another range</button>`)}
+Object.assign(A,{hximport:()=>hxSheet(),hxcancel:()=>{HX.cancel=true;const m=$('#hxmsg');if(m)m.textContent='Cancelling…'},
+ hxmerge:()=>{const rows=HPEND||[];HPEND=null;if(!rows.length)return;mergeHealth(rows,true);closeSheet();toast(`Imported ${rows.length} days from Apple Health`);render(true)}});
+// steps + active energy chart on Progress (fed by imports and manual entry)
+function stepsChartHTML(){const t=today(),D=dRange(addD(t,-29),30),v=D.map(d=>+(S.days[d]||{}).steps||0);if(!v.some(Boolean))return'';const mx=Math.max(...v,10000),avg=Math.round(v.filter(Boolean).reduce((a,b)=>a+b,0)/v.filter(Boolean).length),W=300,H=90,bw=W/30;
+ return`<p class="sec">Steps · last 30 days</p><div class="card"><svg viewBox="0 0 ${W} ${H+14}" class="stepchart" role="img" aria-label="Steps chart, average ${avg} a day"><line x1="0" x2="${W}" y1="${H-H*8000/mx}" y2="${H-H*8000/mx}" class="goal"/>${v.map((x,i)=>`<rect x="${i*bw+1}" y="${H-H*x/mx}" width="${bw-2}" height="${H*x/mx}" rx="2" class="${x>=8000?'hit':''}"/>`).join('')}<text x="0" y="${H+12}">${fmtD(D[0])}</text><text x="${W}" y="${H+12}" text-anchor="end">Today</text></svg><p class="fn" style="margin:6px 0 0">Average <b>${avg.toLocaleString('en-IN')}</b> steps a day · line = 8,000</p></div>`}
+{const sp=sProgressHTML;sProgressHTML=function(){return sp()+stepsChartHTML()}}
+{const sh=subHealth;subHealth=function(){return sh().replace('<p class="sec">Build the Shortcut','<p class="sec">Import everything at once</p><div class="card"><p class="fn" style="white-space:normal;margin:0 0 10px">Health app → your photo (top right) → <b>Export All Health Data</b> → <b>Export</b> → <b>Save to Files</b>. Then come back here.</p><button class="block" data-a="hximport">'+ic('upload')+' Import Health export</button></div><p class="sec">Build the Shortcut')}}
+
 // ---------- init ----------
 ST41();freezeTick();S.lastOpen=today();autoReport();save();render();if(!S.onboarded)onboard();
 {const q=new URLSearchParams(location.search).get('action');if(q&&S.onboarded){if(q==='log')setTimeout(quickSheet,300);else if(q==='water')A.water({dataset:{v:'1'}})}}

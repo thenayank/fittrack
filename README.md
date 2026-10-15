@@ -50,3 +50,7 @@ Source is in `src/` (`style.css`, `foods.js`, `app1–5.js`). Run `python3 build
 - Friends challenges without a server: invite codes, tamper-evident progress codes, local leaderboard.
 - Photo food log: compressed thumbnails in IndexedDB, smart suggestions (plan/recent/frequent).
 - Stress fixes: double-submit guard, view-transition race, storage-full safety, no duplicate active-profile copy, per-day meal index, long-name wrapping.
+
+## 4.1.1 (Oct 2026)
+- More › Apple Health › Import Health export: pick export.zip/export.xml from Files; read fully on-device in chunks (zip central directory + DecompressionStream('deflate-raw'), bundled inflate fallback; streaming XML scanner). Range picker (default 90 days), progress + cancel, preview, merge replacing imported days.
+- Per day: steps & walking/running distance (per-hour max across sources so iPhone+Watch aren't double counted), active energy (kcal/kJ), latest body mass (lb/st→kg), workouts (duration, kcal, distance; old and iOS 16+ formats). New 30-day steps chart on Progress; weekly report uses imported steps/workouts.

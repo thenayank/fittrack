@@ -55,6 +55,16 @@ Source is in `src/` (`style.css`, `foods.js`, `app1–5.js`). Run `python3 build
 - More › Apple Health › Import Health export: pick export.zip/export.xml from Files; read fully on-device in chunks (zip central directory + DecompressionStream('deflate-raw'), bundled inflate fallback; streaming XML scanner). Range picker (default 90 days), progress + cancel, preview, merge replacing imported days.
 - Per day: steps & walking/running distance (per-hour max across sources so iPhone+Watch aren't double counted), active energy (kcal/kJ), latest body mass (lb/st→kg), workouts (duration, kcal, distance; old and iOS 16+ formats). New 30-day steps chart on Progress; weekly report uses imported steps/workouts.
 
+## 4.3 (Oct 2026) — audit release (see AUDIT.md)
+- **Edit logged meals:** tap any Log entry to change the amount, unit, meal slot or date, copy it to today, or delete it.
+- **Diary search + date jump:** Log › "Search my diary" shows when you last ate something; you can also jump to any date.
+- **Nutrition history** (Progress or More): 7/30/90-day averages, protein days hit, kcal and protein charts, top foods, water.
+- **Weigh-ins:** each month shows its average and change; tap a weigh-in to edit the kg or the date.
+- **Export:** Daily-summary, Meals, Workouts and Weigh-ins CSV, plus a one-page Doctor summary (print / Save as PDF) in More › Data.
+- **Movement rings** on Today (Move kcal, Exercise min, Steps), with editable goals and a rest-day pause that doesn't break streaks.
+- **Effort & readiness** in Progress: daily Effort 0–21 from workouts and steps, and a Readiness score with an optional sleep/energy check-in. The weekly report shows Effort and rings-closed days.
+- Fix: on desktop/iPad widths, a closed sheet no longer blocks taps.
+
 ## 4.2 (Oct 2026)
 - Workout history (Progress card, Today › History, More): ranges, totals, weekly minutes chart, type/source filters, virtualized list, details, edit/delete with undo (manual).
 - Health export import: choose Workouts / Steps & distance / Active calories / Weight (remembered); only selected types merged.
